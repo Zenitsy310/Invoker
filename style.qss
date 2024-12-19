@@ -1,0 +1,35 @@
+
+QLabel {
+    background-color: transparent;
+    font-family: times;
+    font-size: 25px;
+    color: white;
+    /*border: 1px solid white;*/
+
+}
+
+QLineEdit{
+    background-color: transparent;
+    font-family: times;
+    font-size: 25px;
+    color: white;
+    border: 1px solid white;
+}
+
+QPushButton{
+    background-color: transparent;
+    font-family: times;
+    font-size: 25px;
+    border: 1px solid #83a;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+}
+
+QComboBox {
+    background-color: transparent;
+    font-family: times;
+    font-size: 20px;
+    color: white;
+    border: 1px solid white;
+}

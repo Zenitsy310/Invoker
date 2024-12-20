@@ -72,7 +72,7 @@ class MainAppAdmin(Window):
         self.search = QLineEdit('Поиск')
         self.layout.addWidget(self.search, 1, 0)
 
-        btn_exel = QPushButton('Експорт в екслель', clicked = self.exportToExcel)
+        btn_exel = QPushButton('Экспорт в экслель', clicked = self.exportToExcel)
         self.layout.addWidget(btn_exel,2,4)
         self.btn_search = QPushButton('Поиск',
                                       clicked=lambda: self.sendSearch())  # clicked=lambda: if    elif self.tabs.currentIndex() == 1   elif self.tabs.currentIndex() == 2 )
@@ -183,8 +183,8 @@ class MainAppAdmin(Window):
                 self.edit_window.lineEdits['Age'].setText(str(self.array_all_users[self.current_user_id][4]))
                 self.edit_window.lineEdits['PasportData'].setText(str(self.array_all_users[self.current_user_id][0]))
                 self.edit_window.lineEdits['Tarif'].setText(str(self.array_all_users[self.current_user_id][5]))
-                self.edit_window.lineEdits['Login'].setText(str(self.array_all_users[self.current_user_id][8]))
-                self.edit_window.lineEdits['Password'].setText(str(self.array_all_users[self.current_user_id][7]))
+                self.edit_window.lineEdits['Login'].setText(str(self.array_all_users[self.current_user_id][7]))
+                self.edit_window.lineEdits['Password'].setText(str(self.array_all_users[self.current_user_id][8]))
                 self.edit_window.lineEdits['Phone_number'].setText(str(self.array_all_users[self.current_user_id][6]))
                 self.edit_window.lineEdits['Balans'].setText(str(self.array_all_users[self.current_user_id][9]))
                 self.edit_window.lineEdits['Root'].setText(str(self.array_all_users[self.current_user_id][10]))
@@ -301,7 +301,7 @@ class MainAppAdmin(Window):
                 dbMan.addNewInfoHistory(self, 'update', array_reg, self.current_admin)
 
     def setTarifTableWidgetEdit(self):
-        self.current_tarif_id = self.tableUsers.currentRow()
+        self.current_tarif_id = self.tableTarif.currentRow()
         self.hide()
         self.edit_window = Window()
         self.edit_window.setWindowTitle('Invoker.Редактирование таблицы Tarif')
@@ -326,17 +326,16 @@ class MainAppAdmin(Window):
         self.edit_window.lineEdits['Additional_services'] = QLineEdit()
 
         if self.current_tarif_id != -1:
-            try:
-                self.edit_window.lineEdits['Tarif_id'].setText(str(self.array_all_tarif[self.current_tarif_id][0]))
-                self.edit_window.lineEdits['Name'].setText(str(self.array_all_tarif[self.current_tarif_id][1]))
-                self.edit_window.lineEdits['Ithernet'].setText(str(self.array_all_tarif[self.current_tarif_id][2]))
-                self.edit_window.lineEdits['Minets'].setText(str(self.array_all_tarif[self.current_tarif_id][3]))
-                self.edit_window.lineEdits['Sms'].setText(str(self.array_all_tarif[self.current_tarif_id][4]))
-                self.edit_window.lineEdits['Cost'].setText(str(self.array_all_tarif[self.current_tarif_id][5]))
-                self.edit_window.lineEdits['Additional_services'].setText(
-                    str(self.array_all_tarif[self.current_tarif_id][6]))
-            except:
-                pass
+            print(str(self.array_all_tarif[self.current_tarif_id][0]))
+            self.edit_window.lineEdits['Tarif_id'].setText(str(self.array_all_tarif[self.current_tarif_id][0]))
+            self.edit_window.lineEdits['Name'].setText(str(self.array_all_tarif[self.current_tarif_id][1]))
+            self.edit_window.lineEdits['Ithernet'].setText(str(self.array_all_tarif[self.current_tarif_id][2]))
+            self.edit_window.lineEdits['Minets'].setText(str(self.array_all_tarif[self.current_tarif_id][3]))
+            self.edit_window.lineEdits['Sms'].setText(str(self.array_all_tarif[self.current_tarif_id][4]))
+            self.edit_window.lineEdits['Cost'].setText(str(self.array_all_tarif[self.current_tarif_id][5]))
+            self.edit_window.lineEdits['Additional_services'].setText(
+                str(self.array_all_tarif[self.current_tarif_id][6]))
+
 
         self.edit_window.layout.addWidget(self.edit_window.labels['Tarif_id'], 0, 0, 1, 1)
         self.edit_window.layout.addWidget(self.edit_window.lineEdits['Tarif_id'], 0, 1, 1, 3)

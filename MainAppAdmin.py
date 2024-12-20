@@ -10,10 +10,10 @@ import pandas as pd
 class MainAppAdmin(Window):
     def __init__(self, current_admin):
         super().__init__()
-        # print(current_admin)
+
         self.current_admin = current_admin
         self.array_all_users = dbMan.getAllUsers(self)
-        self.array_all_tarif = dbMan.getAllTarif(self)
+        self.array_all_tarif = dbMan.getAllTarif()
         self.tarifs_name = []
         for i in self.array_all_tarif:
             if i[1] != 'Выберете новый тариф' and i[1] != '':
@@ -229,17 +229,15 @@ class MainAppAdmin(Window):
         self.edit_window.tarifs_name = []
         # = 0
         for i in self.array_all_tarif:
-            #print(i[1])
+
             if i[1] != 'Выберете новый тариф' and i[1] != '':
                 self.edit_window.tarifs_name.append(i[1])
-
-        #print(str(self.edit_window.tarifs_name) + ' 186')
 
         self.edit_window.combobox_tarif.addItems(self.edit_window.tarifs_name)
 
         self.edit_window.layout.addWidget(self.edit_window.labels['Tarif'], 8, 0, 1, 1)
         self.edit_window.layout.addWidget(self.edit_window.combobox_tarif, 8, 1, 1, 3)
-        #print(str(self.current_user_id) + ' users' )
+
         if self.current_user_id == -1:
             self.edit_window.btn_add_info_user = QPushButton('Добавить', clicked=lambda: self.addUserText('insert'))
             self.edit_window.layout.addWidget(self.edit_window.btn_add_info_user, 12, 1, 1, 1)
@@ -326,7 +324,7 @@ class MainAppAdmin(Window):
         self.edit_window.lineEdits['Additional_services'] = QLineEdit()
 
         if self.current_tarif_id != -1:
-            print(str(self.array_all_tarif[self.current_tarif_id][0]))
+
             self.edit_window.lineEdits['Tarif_id'].setText(str(self.array_all_tarif[self.current_tarif_id][0]))
             self.edit_window.lineEdits['Name'].setText(str(self.array_all_tarif[self.current_tarif_id][1]))
             self.edit_window.lineEdits['Ithernet'].setText(str(self.array_all_tarif[self.current_tarif_id][2]))
@@ -361,7 +359,7 @@ class MainAppAdmin(Window):
         self.edit_window.btn_set_tarif_widgets = QPushButton('Пользователи', clicked=self.setUsersTableWidgetEdit)
         self.edit_window.layout.addWidget(self.edit_window.btn_set_tarif_widgets, 9, 3, 1, 1)
 
-        #print(str (self.current_tarif_id) + 'tarif')
+
         if self.current_tarif_id == -1:
             self.edit_window.btn_add_info_user = QPushButton('Добавить', clicked=lambda: self.addTarifText('insert'))
             self.edit_window.layout.addWidget(self.edit_window.btn_add_info_user, 10, 1, 1, 1)
@@ -392,21 +390,13 @@ class MainAppAdmin(Window):
 
         for i in range(len(array_reg)):
             if action == 'delete' and array_reg[0] != '':
-                dbMan.addNewInfoHistory(self, 'delete',str(array_reg), self.current_admin[0])
+                dbMan.addNewInfoHistory(self, 'delete', str(array_reg), self.current_admin[0])
                 dbMan.deleteTarifFromAdminWindow(self, array_reg[0])
                 break
 
-            elif i != 0 :
-                if array_reg[i] == '':
-                    self.showDilog("Все ячейки должня быть заполнены")
-                    break
-                elif array_reg[i].isdigit() and (i == 1, 6):
-                    self.showDilog("Поля Дополнительные услуги и Название тарифа, не должны быть числами")
-                    break
-                else:
-                    self.showDilog("Поля Интернет, Минуты, Смс, Дополнительные услуги должны содержать только числа")
-                    break
-
+            elif array_reg[i] == '':
+                self.showDilog("Все ячейки должня быть заполнены")
+                break
             elif array_reg[i] != '' and i == len(array_reg) - 1 and action == 'insert':
                 dbMan.addNewTarifFromAdminWindow(self, array_reg[1], array_reg[2], array_reg[3],
                                                  array_reg[4],
@@ -416,7 +406,7 @@ class MainAppAdmin(Window):
                 dbMan.updateTarifFromAdminWindow(self, array_reg[0], array_reg[1], array_reg[2], array_reg[3],
                                                  array_reg[4],
                                                  array_reg[5], array_reg[6])
-                dbMan.addNewInfoHistory(self, 'update', str(array_reg), self.current_admin[0])
+                dbMan.addNewInfoHistory(self, 'update', '' +str(array_reg), self.current_admin[0])
 
     def setTableHistoryWiget(self):
         self.current_history_id = self.tableUsers.currentRow()
@@ -583,7 +573,7 @@ class MainAppAdmin(Window):
 
     def writeTableTarif(self):
         #self.array_all_tarif.clear()
-        self.array_all_tarif = dbMan.getAllTarif(self)
+        self.array_all_tarif = dbMan.getAllTarif()
         self.tableTarif.setRowCount(len(self.array_all_tarif))
         row = 0
         for i in self.array_all_tarif:
@@ -655,19 +645,19 @@ class MainAppAdmin(Window):
                         res += 1
                     self.tableHistory.setRowHidden(row, name not in item.text().lower() and res == 0 and col == 4)
 
-
-
-
     def findHistory(self, id):
         if id.isdigit():
-            self.history_window.current_history = dbMan.getHistoryFromId(self, id)
-            #(self.history_window.current_history)
-            self.history_window.labels['id'].setText('id записи:' + str(self.history_window.current_history[0]))
-            self.history_window.labels['type'].setText('Тип операции:' + str(self.history_window.current_history[1]))
-            self.history_window.labels['date'].setText('Дата операции: ' + str(self.history_window.current_history[2]))
-            self.history_window.labels['after_act'].setText('Данные операции: ' + str(self.history_window.current_history[3]))
-            self.history_window.labels['admin_log'] .setText(
-                'Данные админ-а , кто совершил операцию: ' + str(self.history_window.current_history[4]))
+            try:
+                self.history_window.current_history = dbMan.getHistoryFromId(self, id)
+                #(self.history_window.current_history)
+                self.history_window.labels['id'].setText('id записи:' + str(self.history_window.current_history[0]))
+                self.history_window.labels['type'].setText('Тип операции:' + str(self.history_window.current_history[1]))
+                self.history_window.labels['date'].setText('Дата операции: ' + str(self.history_window.current_history[2]))
+                self.history_window.labels['after_act'].setText('Данные операции: ' + str(self.history_window.current_history[3]))
+                self.history_window.labels['admin_log'] .setText(
+                    'Данные админ-а , кто совершил операцию: ' + str(self.history_window.current_history[4]))
+            except:
+                self.showDilog('id с такой записью не существует')
 
         else:
             self.showDilog('Введите число, id интересующей вас записи')

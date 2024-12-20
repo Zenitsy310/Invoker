@@ -1,7 +1,7 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import *
+
 import MainApp
-import MainAppAdmin
 import dbMan
 from Window import Window
 
@@ -48,14 +48,14 @@ class RegistrationWindow(Window):
         self.layout.addWidget(self.lineEdits['PasportData'], 4, 1, 1, 3)
 
         self.combobox_tarif = QComboBox()
-        self.all_tarif = dbMan.getAllTarif(self)
-        #print(str(self.tarifs_name)+" redW")
+        self.all_tarif = dbMan.getAllTarif()
+
         self.tarifs_name = []
         # = 0
         for i in self.all_tarif:
 
             if i[1] != 'Выбирете новый тариф':
-                print(i[1])
+
                 self.tarifs_name.append(i[1])
         self.combobox_tarif.addItems(self.tarifs_name)
 
@@ -104,13 +104,14 @@ class RegistrationWindow(Window):
             elif array_reg[i].isdigit() and (i == 1 or i == 0 or i == 2):
                 RegistrationWindow.showDilog(self, "Поля с ФИО не могут быть числом")
                 break
-            #print(array_reg[i].isalpha())
-            if isinstance(array_reg[i], str) and (i == 3 or i == 4):
-                RegistrationWindow.showDilog(self, "Поля Возраст, Серия и номер паспорта не могут быть текстом")
-                break
+
+            #if isinstance(array_reg[i], str) and (i == 3 or i == 4):
+               # RegistrationWindow.showDilog(self, "Поля Возраст, Серия и номер паспорта не могут быть текстом")
+               # break
             if array_reg[i] != '' and i == len(array_reg) - 1:
                 dbMan.addInfoUser(self, array_reg[0], array_reg[1], array_reg[2], array_reg[3], array_reg[4],
                                   array_reg[5], array_reg[6], array_reg[7])
+
 
     def tarifInfo(self):
         self.dlg = self.tarifWindow()

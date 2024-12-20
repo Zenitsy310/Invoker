@@ -16,8 +16,8 @@ class LoginWindow(Window):
         labels['Username'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         labels['Password'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
-        self.lineEdits['Username'] = QLineEdit('admin')
-        self.lineEdits['Password'] = QLineEdit('admin')
+        self.lineEdits['Username'] = QLineEdit('')
+        self.lineEdits['Password'] = QLineEdit('')
         self.lineEdits['Password'].setEchoMode(QLineEdit.EchoMode.Password)
         # layout.addWidget(labelBg)
         self.layout.addWidget(labels['Username'], 0, 0, 1, 1)

@@ -32,13 +32,13 @@ class MainApp(Window):
             if i != 'Выбирете новый тариф':
                 self.tarifs_name.append(i)
 
-        self.labels['PhoneNumber'] = QLabel('')#,alignment=Qt.AlignmentFlag.AlignCenter
-        #self.labels['PhoneNumber'].setStyleSheet("")
-        self.labels['Balans'] = QLabel('')#,alignment=Qt.AlignmentFlag.AlignCenter
+        self.labels['PhoneNumber'] = QLabel('')
+
+        self.labels['Balans'] = QLabel('')
         self.WidgetUpdate(self.array_user_data[0])
         self.layout.addWidget(self.labels['PhoneNumber'], 0, 0, alignment=Qt.AlignmentFlag.AlignTop)
 
-        self.layout.addWidget(self.labels['Balans'], 1, 0)
+        self.layout.addWidget(self.labels['Balans'], 1, 0)#,alignment=Qt.AlignmentFlag.AlignCenter
 
         self.button_add_balans = QPushButton('Пополнить баланс',
                                              clicked=lambda: [self.showBalansWindow(self.array_user_data[0])])
@@ -80,11 +80,12 @@ class MainApp(Window):
 
     def WidgetUpdate(self, pas):
         self.array_user_data = dbMan.getUserInfo(pas)
+
         self.array_tarif_info = dbMan.getInfoTarif(self, self.array_user_data[5])
 
         self.labels['PhoneNumber'].setText('Ваш номер телефона: ' + str(self.array_user_data[6]) + '\n Сегодня: '
                                             + str(date.today()) + ".")
-        # self.labels['PhoneNumber'].setStyleSheet("")
+
         self.labels['Balans'].setText('Баланс: ' + str(self.array_user_data[9]) + 'р\n'
                                                                                    'Тариф: ' + str(
             self.array_user_data[5]) + '\n'
@@ -114,7 +115,7 @@ class MainApp(Window):
         self.balansWindow.close()
 
     def changeTarif(self):
-        from RegistrationWindow import RegistrationWindow
+
         self.tarifWindow = Window()
         self.tarifWindow.setFixedSize(450, 150)
         self.tarifWindow.labelCnageTarif = QLabel('Выбирете новый желаемый тариф')
@@ -212,3 +213,4 @@ class MainApp(Window):
                                                              'Смс: ' + self.array_info[4] + '\n'
                                                                                             'Стоимость: ' +
                                         self.array_info[5] + ' рублей в месяц')
+

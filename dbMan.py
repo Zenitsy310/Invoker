@@ -94,21 +94,24 @@ def addInfoUser(self, Name, LastName, Patronymic, Age, PasportData, Tarif, Login
     with sqlite3.connect('Invoker.db') as db:
         cursor = db.cursor()
         try:
-            cursor.execute(''' INSERT INTO "Users"('Passport_data', 'First_name', 'Last_name', 'Patronymic', 'Age', 'Current_tarif','Phone_number','Login', 'Password', 'Balans', 'Root')  
-            VALUES (?,?,?,?,?,?,?,?,?,0,0) ''',
+            cursor.execute(''' INSERT INTO "Users"('Passport_data', 'First_name', 'Last_name', 'Patronymic', 'Age', 'Current_tarif','Phone_number','Login', 'Password', 'Balans', 'Root', 'Last_op')  
+            VALUES (?,?,?,?,?,?,?,?,?,0,0,'-')''',
                            (PasportData, Name, LastName, Patronymic, Age, Tarif,
-                            str(random.randint(80000000000, 89999999999)), Login,
-                            Password))
-            res = cursor.execute('''SELECT * FROM Users WHERE login =  (?) AND password = (?)''',
-                                 (Login, Password)).fetchone()
+                            str(random.randint(80000000000, 89999999999)), Login, Password))
+            try:
+                db.commit()
+            except:
+                pass
+            auth(self, Login, Password)
 
-            LoginWindow.LoginWindow.showDilog(self, 'Вы завершили регистрацию, добро пожаловать в личный кабинет!')
-            LoginWindow.LoginWindow.openMainWindow(self, res)
-        except:
-            LoginWindow.LoginWindow.showDilog(self, "Ошибка.Проверьте правильность заполнения данных --")
+            #LoginWindow.LoginWindow.openMainWindow(self, res)
+
+        except Exception as e:
+            LoginWindow.LoginWindow.showDilog(self, "Ошибка.Проверьте правильность заполнения данных")
+            print(e)
+
         finally:
             db.commit()
-
 
 def addNewUserFromAdminWindow(self, passport_data, First_name, Last_name, Patronymic, Age, Current_tarif, Phone_number,
                               Login,
@@ -117,12 +120,12 @@ def addNewUserFromAdminWindow(self, passport_data, First_name, Last_name, Patron
         cursor = db.cursor()
         try:
             cursor.execute('''INSERT INTO"Users"("Passport_data", "First_name", "Last_name", "Patronymic", "Age", "Current_tarif", "Phone_number", "Login",
-            "Password", "Balans", "Root" ,"Last_op") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,-)''', (
+            "Password", "Balans", "Root" ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)''', (
                 passport_data, First_name, Last_name, Patronymic, str(Age), str(Current_tarif), str(Phone_number),
                 str(Login), str(Password), str(Balans), str(Root)))
             RegistrationWindow.RegistrationWindow.showDilog(self, 'Вы завершили регистрацию пользователя')
         except:
-            LoginWindow.LoginWindow.showDilog(self, "Ошибка.Проверьте правильность заполнения данных")
+            LoginWindow.LoginWindow.showDilog(self, "Ошибка.Проверьте правильность заполнения данных -")
         finally:
             db.commit()
 
@@ -162,9 +165,10 @@ def addNewInfoHistory(self, Type,AfterAct, AdminLog):
         cursor = db.cursor()
         try:
             cursor.execute('''INSERT INTO "History" (Type,Date,AfterAct,AdminLog) VALUES (?,?,?,?)''',
-                           (Type, str(Date), str(AfterAct), str(AdminLog[7])))
-        except:
-            pass
+                               (Type, str(Date), str(AfterAct), str(AdminLog)))
+        except Exception as e:
+            #print(e)
+            LoginWindow.LoginWindow.showDilog(self, 'Ошибка, проверьте правильность заполненных полей')
         finally:
             db.commit()
 def addNewTarifFromAdminWindow(self, Name, Ithernet, Minets, Sms, Cost, Additional_services):
@@ -187,12 +191,12 @@ def addNewTarifFromAdminWindow(self, Name, Ithernet, Minets, Sms, Cost, Addition
 def updateTarifFromAdminWindow(self, Tarif_id, Name, Ithernet, Minets, Sms, Cost, Additional_services):
     with sqlite3.connect('Invoker.db') as db:
         cursor = db.cursor()
-
+        executeU = ''
         try:
-            executeU = '''UPDATE "Tarif" SET "Tarif_id" = '{}', "Name" = '{}', "Ithernet" = '{}', "Minets" = '{}' ,
-                         "Sms" = '{}', "Cost" = '{}' , "Additional_services" = '{}' WHERE "Tarif_id" = '{}' '''.format(
+            executeU = '''UPDATE "Tarif" SET "Tarif_id" = "{}", "Name" = "{}", "Ithernet" = "{}", "Minets" = "{}" ,
+                         "Sms" = "{}", "Cost" = "{}" , "Additional_services" = "{}" WHERE "Tarif_id" = "{}"'''.format(
                 str(Tarif_id), str(Name), str(Ithernet), str(Minets),
-                str(Sms), str(Cost), str(Additional_services))
+                str(Sms), str(Cost), str(Additional_services),str(Tarif_id))
 
             cursor.execute(executeU)
 
@@ -274,7 +278,7 @@ def getAllUsers(self):
         finally:
 
             db.commit()
-def getAllTarif(self):
+def getAllTarif():
     with sqlite3.connect('Invoker.db') as db:
         cursor = db.cursor()
 
@@ -445,7 +449,7 @@ def getLastOp(self,passport):
         cursor = db.cursor()
         try:
             res = cursor.execute('''Select "Last_op" FROM "Users" WHERE Passport_data ="''' + str(passport) + '''";''').fetchone()[0]
-            #print(res)
+
             return res
         except:
             pass
